@@ -48,14 +48,18 @@ export default function AutoCameraCapture({ onSendPhoto, isLoading }: AutoCamera
       console.error('Camera access error:', error);
       setHasPermission(false);
       
-      if (error.name === 'NotAllowedError') {
-        setError('Camera access denied. Please allow camera permission.');
-      } else if (error.name === 'NotFoundError') {
-        setError('No camera found on this device.');
-      } else if (error.name === 'NotSupportedError') {
-        setError('Camera not supported on this browser.');
+      if (error instanceof Error) {
+        if (error.name === 'NotAllowedError') {
+          setError('Camera access denied. Please allow camera permission.');
+        } else if (error.name === 'NotFoundError') {
+          setError('No camera found on this device.');
+        } else if (error.name === 'NotSupportedError') {
+          setError('Camera not supported on this browser.');
+        } else {
+          setError('Failed to access camera: ' + error.message);
+        }
       } else {
-        setError('Failed to access camera: ' + (error instanceof Error ? error.message : 'Unknown error'));
+        setError('Failed to access camera: Unknown error');
       }
       return false;
     }
