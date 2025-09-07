@@ -1,7 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // Enable HTTPS in development
+  experimental: {
+    httpsServer: true,
+  },
 };
 
 export default nextConfig;
