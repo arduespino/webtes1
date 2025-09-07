@@ -79,7 +79,7 @@ export class ImageCompressor {
     maxWidth: number,
     maxHeight: number
   ): { width: number; height: number } {
-    let { width, height } = { width: originalWidth, height: originalHeight };
+    const { width, height } = { width: originalWidth, height: originalHeight };
 
     // If image is smaller than max dimensions, return original
     if (width <= maxWidth && height <= maxHeight) {

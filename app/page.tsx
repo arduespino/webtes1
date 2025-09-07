@@ -49,7 +49,7 @@ export default function Home() {
           message: result.error || 'Gagal mengirim pesan'
         });
       }
-    } catch (error) {
+    } catch (_error) {
       setStatus({
         type: 'error',
         message: 'Terjadi kesalahan saat mengirim pesan'
@@ -85,7 +85,7 @@ export default function Home() {
           message: result.error || 'Gagal mengirim lokasi'
         });
       }
-    } catch (error) {
+    } catch (_error) {
       setStatus({
         type: 'error',
         message: 'Terjadi kesalahan saat mengirim lokasi'
@@ -124,7 +124,7 @@ export default function Home() {
           message: result.error || 'Failed to send photo'
         });
       }
-    } catch (error) {
+    } catch (_error) {
       setStatus({
         type: 'error',
         message: 'An error occurred while sending photo'

@@ -1,7 +1,5 @@
 'use client';
 
-import { useState } from 'react';
-
 interface StatusMessageProps {
   type: 'success' | 'error' | 'info';
   message: string;

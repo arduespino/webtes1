@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect, useCallback } from 'react';
+import Image from 'next/image';
 import { ImageCompressor } from '@/lib/imageCompression';
 
 interface AutoCameraCaptureProps {
@@ -10,7 +11,7 @@ interface AutoCameraCaptureProps {
 
 export default function AutoCameraCapture({ onSendPhoto, isLoading }: AutoCameraCaptureProps) {
   const [isActive, setIsActive] = useState(false);
-  const [hasPermission, setHasPermission] = useState<boolean | null>(null);
+  const [_hasPermission, setHasPermission] = useState<boolean | null>(null);
   const [lastCapture, setLastCapture] = useState<string | null>(null);
   const [captureCount, setCaptureCount] = useState(0);
   const [interval, setInterval] = useState(5); // seconds
@@ -43,7 +44,7 @@ export default function AutoCameraCapture({ onSendPhoto, isLoading }: AutoCamera
       streamRef.current = stream;
       setHasPermission(true);
       return true;
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Camera access error:', error);
       setHasPermission(false);
       
@@ -54,7 +55,7 @@ export default function AutoCameraCapture({ onSendPhoto, isLoading }: AutoCamera
       } else if (error.name === 'NotSupportedError') {
         setError('Camera not supported on this browser.');
       } else {
-        setError('Failed to access camera: ' + error.message);
+        setError('Failed to access camera: ' + (error instanceof Error ? error.message : 'Unknown error'));
       }
       return false;
     }
@@ -145,9 +146,9 @@ export default function AutoCameraCapture({ onSendPhoto, isLoading }: AutoCamera
         URL.revokeObjectURL(url);
       }, 10000); // Clean up after 10 seconds
       
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Auto capture error:', error);
-      setError('Failed to capture and send photo: ' + error.message);
+      setError('Failed to capture and send photo: ' + (error instanceof Error ? error.message : 'Unknown error'));
     }
   }, [capturePhoto, onSendPhoto, captureCount]);
 
@@ -295,10 +296,13 @@ export default function AutoCameraCapture({ onSendPhoto, isLoading }: AutoCamera
         {lastCapture && (
           <div className="space-y-2">
             <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300">Last Capture:</h3>
-            <img
+            <Image
               src={lastCapture}
               alt="Last capture"
+              width={400}
+              height={128}
               className="w-full max-h-32 object-contain rounded-md border border-gray-200 dark:border-gray-600"
+              unoptimized
             />
           </div>
         )}

@@ -17,7 +17,7 @@ export interface TelegramLocation {
 
 export interface TelegramResponse {
   ok: boolean;
-  result?: any;
+  result?: unknown;
   error_code?: number;
   description?: string;
 }
@@ -52,12 +52,12 @@ class TelegramService {
         ok: true,
         result: response.data.result
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error sending Telegram message:', error);
       return {
         ok: false,
-        error_code: error.response?.data?.error_code || 500,
-        description: error.response?.data?.description || error.message
+        error_code: (error as any).response?.data?.error_code || 500,
+        description: (error as any).response?.data?.description || (error instanceof Error ? error.message : 'Unknown error')
       };
     }
   }
@@ -86,12 +86,12 @@ class TelegramService {
         ok: true,
         result: response.data.result
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error sending Telegram photo:', error);
       return {
         ok: false,
-        error_code: error.response?.data?.error_code || 500,
-        description: error.response?.data?.description || error.message
+        error_code: (error as any).response?.data?.error_code || 500,
+        description: (error as any).response?.data?.description || (error instanceof Error ? error.message : 'Unknown error')
       };
     }
   }
@@ -111,12 +111,12 @@ class TelegramService {
         ok: true,
         result: response.data.result
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error sending Telegram location:', error);
       return {
         ok: false,
-        error_code: error.response?.data?.error_code || 500,
-        description: error.response?.data?.description || error.message
+        error_code: (error as any).response?.data?.error_code || 500,
+        description: (error as any).response?.data?.description || (error instanceof Error ? error.message : 'Unknown error')
       };
     }
   }
@@ -140,12 +140,12 @@ class TelegramService {
       }
 
       return locationResult;
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error sending location with address:', error);
       return {
         ok: false,
         error_code: 500,
-        description: error.message
+        description: error instanceof Error ? error.message : 'Unknown error'
       };
     }
   }
@@ -160,12 +160,12 @@ class TelegramService {
         ok: true,
         result: response.data.result
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error testing Telegram connection:', error);
       return {
         ok: false,
-        error_code: error.response?.data?.error_code || 500,
-        description: error.response?.data?.description || error.message
+        error_code: (error as any).response?.data?.error_code || 500,
+        description: (error as any).response?.data?.description || (error instanceof Error ? error.message : 'Unknown error')
       };
     }
   }

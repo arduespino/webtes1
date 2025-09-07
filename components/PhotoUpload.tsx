@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useCallback } from 'react';
+import Image from 'next/image';
 import { ImageCompressor } from '@/lib/imageCompression';
 
 interface PhotoUploadProps {
@@ -198,10 +199,13 @@ export default function PhotoUpload({ onSendPhoto, isLoading }: PhotoUploadProps
           <div className="space-y-4">
             {/* Photo Preview */}
             <div className="relative">
-              <img
+              <Image
                 src={previewUrl!}
                 alt="Preview"
+                width={400}
+                height={300}
                 className="w-full max-h-64 object-contain rounded-lg border border-gray-200 dark:border-gray-600"
+                unoptimized
               />
               <button
                 onClick={handleReset}
