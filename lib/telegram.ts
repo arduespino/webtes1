@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 
 export interface TelegramPhoto {
   file: File | Blob;
@@ -20,6 +20,28 @@ export interface TelegramResponse {
   result?: unknown;
   error_code?: number;
   description?: string;
+}
+
+// Helper function to extract error information safely
+function getErrorInfo(error: unknown): { error_code: number; description: string } {
+  if (error instanceof Error) {
+    // Check if it's an Axios error
+    if ('response' in error && error.response && typeof error.response === 'object') {
+      const axiosError = error as AxiosError<{ error_code?: number; description?: string }>;
+      return {
+        error_code: axiosError.response?.data?.error_code || axiosError.response?.status || 500,
+        description: axiosError.response?.data?.description || error.message
+      };
+    }
+    return {
+      error_code: 500,
+      description: error.message
+    };
+  }
+  return {
+    error_code: 500,
+    description: 'Unknown error'
+  };
 }
 
 class TelegramService {
@@ -54,10 +76,11 @@ class TelegramService {
       };
     } catch (error: unknown) {
       console.error('Error sending Telegram message:', error);
+      const errorInfo = getErrorInfo(error);
       return {
         ok: false,
-        error_code: (error as any).response?.data?.error_code || 500,
-        description: (error as any).response?.data?.description || (error instanceof Error ? error.message : 'Unknown error')
+        error_code: errorInfo.error_code,
+        description: errorInfo.description
       };
     }
   }
@@ -88,10 +111,11 @@ class TelegramService {
       };
     } catch (error: unknown) {
       console.error('Error sending Telegram photo:', error);
+      const errorInfo = getErrorInfo(error);
       return {
         ok: false,
-        error_code: (error as any).response?.data?.error_code || 500,
-        description: (error as any).response?.data?.description || (error instanceof Error ? error.message : 'Unknown error')
+        error_code: errorInfo.error_code,
+        description: errorInfo.description
       };
     }
   }
@@ -113,10 +137,11 @@ class TelegramService {
       };
     } catch (error: unknown) {
       console.error('Error sending Telegram location:', error);
+      const errorInfo = getErrorInfo(error);
       return {
         ok: false,
-        error_code: (error as any).response?.data?.error_code || 500,
-        description: (error as any).response?.data?.description || (error instanceof Error ? error.message : 'Unknown error')
+        error_code: errorInfo.error_code,
+        description: errorInfo.description
       };
     }
   }
@@ -162,10 +187,11 @@ class TelegramService {
       };
     } catch (error: unknown) {
       console.error('Error testing Telegram connection:', error);
+      const errorInfo = getErrorInfo(error);
       return {
         ok: false,
-        error_code: (error as any).response?.data?.error_code || 500,
-        description: (error as any).response?.data?.description || (error instanceof Error ? error.message : 'Unknown error')
+        error_code: errorInfo.error_code,
+        description: errorInfo.description
       };
     }
   }

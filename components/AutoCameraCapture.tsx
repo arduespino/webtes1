@@ -11,7 +11,7 @@ interface AutoCameraCaptureProps {
 
 export default function AutoCameraCapture({ onSendPhoto, isLoading }: AutoCameraCaptureProps) {
   const [isActive, setIsActive] = useState(false);
-  const [_hasPermission, setHasPermission] = useState<boolean | null>(null);
+  const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const [lastCapture, setLastCapture] = useState<string | null>(null);
   const [captureCount, setCaptureCount] = useState(0);
   const [interval, setInterval] = useState(5); // seconds
@@ -21,7 +21,7 @@ export default function AutoCameraCapture({ onSendPhoto, isLoading }: AutoCamera
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
-  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   // Request camera permission and start stream
   const startCamera = useCallback(async () => {
@@ -246,7 +246,7 @@ export default function AutoCameraCapture({ onSendPhoto, isLoading }: AutoCamera
 
             <button
               onClick={startAutoCapture}
-              disabled={isLoading}
+              disabled={isLoading || hasPermission === false}
               className="w-full bg-green-600 hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-medium py-3 px-4 rounded-md transition-colors duration-200 flex items-center justify-center gap-2"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
