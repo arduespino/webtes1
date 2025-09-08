@@ -21,7 +21,7 @@ export default function AutoCameraCapture({ onSendPhoto, isLoading }: AutoCamera
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const intervalRef = useRef<number | null>(null);
 
   // Request camera permission and start stream
   const startCamera = useCallback(async () => {
@@ -168,7 +168,7 @@ export default function AutoCameraCapture({ onSendPhoto, isLoading }: AutoCamera
     setError(null);
 
     // Start interval for auto capture
-    intervalRef.current = setInterval(() => {
+    intervalRef.current = window.setInterval(() => {
       autoCapture();
     }, interval * 1000);
 
